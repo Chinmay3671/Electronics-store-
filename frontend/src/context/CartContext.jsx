@@ -15,10 +15,10 @@ export const CartProvider = ({ children }) => {
   const { addToast } = useToast();
 
   const getCartTotal = useCallback(() => {
-    if (!cart?.items) return 0;
+    if (!cart?.items || cart.items.length === 0) return 0;
     return cart.items.reduce((sum, item) => {
-      const price = item.product?.salePrice || item.product?.price || item.unitPrice || 0;
-      return sum + price * (item.quantity || 1);
+      const price = item.unitPrice ?? item.price ?? item.product?.salePrice ?? item.product?.price ?? 0;
+      return sum + (Number(price) * (item.quantity || 1));
     }, 0);
   }, [cart]);
 
@@ -31,9 +31,28 @@ export const CartProvider = ({ children }) => {
     if (!isAuthenticated) return;
     try {
       const res = await cartApi.getCart();
-      const cartData = res?.data || res;
-      if (cartData && cartData.items) {
+      const cartData = res?.data?.data || res?.data || res;
+      if (cartData && Array.isArray(cartData.items) && cartData.items.length > 0) {
         saveLocalCart(cartData);
+      } else {
+        // If server cart is empty but local cart has items, sync local items to server
+        const saved = localStorage.getItem('techvault_local_cart');
+        if (saved) {
+          const localObj = JSON.parse(saved);
+          if (localObj.items && localObj.items.length > 0) {
+            for (const it of localObj.items) {
+              const pid = it.productId || it.product?.id || it.id;
+              if (pid) {
+                try { await cartApi.addItem(pid, it.quantity || 1); } catch (e) {}
+              }
+            }
+            const refreshed = await cartApi.getCart();
+            const refData = refreshed?.data?.data || refreshed?.data || refreshed;
+            if (refData && Array.isArray(refData.items)) {
+              saveLocalCart(refData);
+            }
+          }
+        }
       }
     } catch (err) {
       console.error('Failed to fetch cart from server:', err);

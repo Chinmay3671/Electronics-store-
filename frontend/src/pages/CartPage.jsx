@@ -102,32 +102,37 @@ const CartPage = () => {
           <div className="lg:col-span-2 space-y-4">
             {cart.items.map((item) => {
               const product = item.product || {};
-              const price = product.salePrice || product.price || 0;
-              const originalPrice = product.originalPrice;
+              const itemName = item.productName || product.name || item.name || 'Electronics Product';
+              const itemImage = item.productImage || product.mainImage || 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=500&auto=format&fit=crop&q=60';
+              const price = item.unitPrice ?? item.price ?? product.salePrice ?? product.price ?? 0;
+              const originalPrice = product.originalPrice || item.originalPrice;
+              const prodId = item.productId || product.id || item.id;
+              const brandName = item.brandName || product.brandName || product.brand?.name || 'TECHVAULT';
+              const stockQty = item.availableStock ?? product.stockQuantity;
 
               return (
                 <div
-                  key={item.id}
+                  key={item.id || item.productId}
                   className="p-5 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:border-slate-300 transition-all shadow-sm"
                 >
                   <div className="flex items-center gap-4">
-                    <Link to={`/products/${product.id}`} className="shrink-0">
+                    <Link to={`/products/${prodId}`} className="shrink-0">
                       <img
-                        src={product.mainImage || 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=500&auto=format&fit=crop&q=60'}
-                        alt={product.name}
+                        src={itemImage}
+                        alt={itemName}
                         className="w-20 h-20 object-contain bg-slate-50 rounded-xl p-2 border border-slate-100"
                       />
                     </Link>
 
                     <div>
                       <span className="text-[11px] font-black text-blue-600 uppercase tracking-wider">
-                        {product.brandName || product.brand?.name || 'TECHVAULT'}
+                        {brandName}
                       </span>
                       <Link
-                        to={`/products/${product.id}`}
+                        to={`/products/${prodId}`}
                         className="text-sm font-bold text-slate-900 hover:text-blue-600 transition-colors line-clamp-1 block mt-0.5"
                       >
-                        {product.name}
+                        {itemName}
                       </Link>
 
                       <div className="flex items-baseline gap-2 mt-1 font-mono">
@@ -139,8 +144,8 @@ const CartPage = () => {
                         )}
                       </div>
 
-                      {product.stockQuantity < 5 && product.stockQuantity > 0 && (
-                        <p className="text-[11px] text-amber-700 mt-1 font-bold">Only {product.stockQuantity} left in stock!</p>
+                      {stockQty < 5 && stockQty > 0 && (
+                        <p className="text-[11px] text-amber-700 mt-1 font-bold">Only {stockQty} left in stock!</p>
                       )}
                     </div>
                   </div>

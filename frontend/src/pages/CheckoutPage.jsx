@@ -65,45 +65,76 @@ const CheckoutPage = () => {
         const defaultAddr = addrList.find(a => a.isDefault) || addrList[0];
         if (defaultAddr) {
           setSelectedAddressId(defaultAddr.id);
+          setShowNewAddressForm(false);
         } else {
           setShowNewAddressForm(true);
         }
       }
     } catch (err) {
       console.error('Failed to load user addresses', err);
+      setShowNewAddressForm(true);
     }
   };
 
   const handleCreateAddress = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    if (!newAddress.addressLine || !newAddress.city || !newAddress.state || !newAddress.pincode) {
+      addToast('Please fill in Street Address, City, State, and Pincode.', 'error');
+      return null;
+    }
     try {
       const res = await addressApi.create(newAddress);
       if (res.data?.success) {
         addToast('Delivery address saved!', 'success');
+        const createdId = res.data.data.id;
         await fetchAddresses();
-        setSelectedAddressId(res.data.data.id);
+        setSelectedAddressId(createdId);
         setShowNewAddressForm(false);
+        return createdId;
       }
     } catch (err) {
       addToast(err.response?.data?.message || 'Failed to save address. Check fields.', 'error');
+      return null;
     }
   };
 
   const handlePlaceOrder = async () => {
-    if (!selectedAddressId) {
-      addToast('Please select or add a delivery address first.', 'error');
-      return;
-    }
-
     if (!cart?.items || cart.items.length === 0) {
       addToast('Your cart is empty. Please add products to checkout.', 'error');
       return;
     }
 
+    let finalAddressId = selectedAddressId;
+
+    // If no address selected but new address form is active/filled, auto-save address first
+    if (!finalAddressId) {
+      if (showNewAddressForm || newAddress.addressLine) {
+        const createdId = await handleCreateAddress();
+        if (!createdId) return;
+        finalAddressId = createdId;
+      } else if (addresses.length > 0) {
+        finalAddressId = addresses[0].id;
+        setSelectedAddressId(finalAddressId);
+      } else {
+        setShowNewAddressForm(true);
+        addToast('Please enter your delivery address to place the order.', 'error');
+        return;
+      }
+    }
+
     setProcessingOrder(true);
     try {
+      // Ensure backend cart is populated
+      for (const it of cart.items) {
+        const pid = it.productId || it.product?.id || it.id;
+        if (pid) {
+          try { await cartApi.addItem(pid, it.quantity || 1); } catch (e) {}
+        }
+      }
+
       const orderPayload = {
-        shippingAddressId: selectedAddressId,
+        addressId: finalAddressId,
+        shippingAddressId: finalAddressId,
         paymentMethod: paymentMethod,
         couponCode: appliedCoupon?.code || null,
         deliveryNotes: deliveryType === 'EXPRESS' ? 'Priority Express Dispatch' : 'Standard Delivery'
@@ -112,15 +143,17 @@ const CheckoutPage = () => {
       const res = await orderApi.createOrder(orderPayload);
       if (res.data?.success) {
         const orderData = res.data.data;
-        addToast('Order placed successfully!', 'success');
+        addToast('Order placed successfully! 🎉', 'success');
         clearCart();
         navigate(`/order-success/${orderData.orderNumber || orderData.id}`, {
           state: { order: orderData }
         });
+      } else {
+        addToast(res.data?.message || 'Failed to place order.', 'error');
       }
     } catch (err) {
       console.error('Order creation error', err);
-      addToast(err.response?.data?.message || 'Failed to complete transaction. Stock might be reserved.', 'error');
+      addToast(err.response?.data?.message || 'Failed to complete transaction. Please check your cart or address.', 'error');
     } finally {
       setProcessingOrder(false);
     }
@@ -436,14 +469,18 @@ const CheckoutPage = () => {
               <div className="space-y-3 max-h-64 overflow-y-auto pr-1 mb-4 custom-scrollbar">
                 {cart.items.map((item) => {
                   const product = item.product || {};
+                  const itemName = item.productName || product.name || item.name || 'Electronics Product';
+                  const itemUnitPrice = item.unitPrice ?? item.price ?? product.salePrice ?? product.price ?? 0;
+                  const itemQuantity = item.quantity || 1;
+
                   return (
-                    <div key={item.id} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-100">
+                    <div key={item.id || item.productId} className="flex items-center justify-between text-xs py-1.5 border-b border-slate-100">
                       <div className="flex items-center gap-2 max-w-[70%]">
-                        <span className="font-bold text-blue-600 font-mono">{item.quantity}x</span>
-                        <span className="text-slate-800 font-medium truncate">{product.name}</span>
+                        <span className="font-bold text-blue-600 font-mono">{itemQuantity}x</span>
+                        <span className="text-slate-800 font-medium truncate" title={itemName}>{itemName}</span>
                       </div>
                       <span className="font-bold text-slate-900 font-mono">
-                        {formatCurrency((product.salePrice || product.price || 0) * item.quantity)}
+                        {formatCurrency(Number(itemUnitPrice) * itemQuantity)}
                       </span>
                     </div>
                   );
@@ -484,9 +521,15 @@ const CheckoutPage = () => {
                 <span className="text-2xl font-black text-slate-900 font-mono">{formatCurrency(finalTotal)}</span>
               </div>
 
+              {!selectedAddressId && !showNewAddressForm && addresses.length === 0 && (
+                <div className="mb-3 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] text-amber-800 font-medium flex items-center gap-2">
+                  <span>📍 Please add your delivery address on the left.</span>
+                </div>
+              )}
+
               <button
                 onClick={handlePlaceOrder}
-                disabled={processingOrder || !selectedAddressId}
+                disabled={processingOrder}
                 className="w-full py-3.5 bg-amber-400 hover:bg-amber-500 disabled:opacity-50 text-slate-950 font-black rounded-xl text-sm transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
               >
                 {processingOrder ? (

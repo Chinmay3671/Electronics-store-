@@ -16,9 +16,11 @@ public class CreateOrderRequest {
 
     public CreateOrderRequest() {}
 
-    public Long getAddressId() { return id(); }
-    public Long id() { return addressId; }
+    public Long getAddressId() { return addressId; }
     public void setAddressId(Long addressId) { this.addressId = addressId; }
+
+    public Long getShippingAddressId() { return addressId; }
+    public void setShippingAddressId(Long shippingAddressId) { this.addressId = shippingAddressId; }
 
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
