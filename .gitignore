@@ -1,0 +1,47 @@
+# Dependencies & Package Managers
+node_modules/
+frontend/node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+frontend/dist/
+dist-ssr/
+frontend/dist-ssr/
+target/
+backend/target/
+build/
+bin/
+
+# Maven downloaded tooling
+backend/apache-maven-*/
+apache-maven-*/
+
+# Environment and secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.iml
+.DS_Store
+Thumbs.db

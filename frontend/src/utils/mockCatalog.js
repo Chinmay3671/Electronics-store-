@@ -1,0 +1,197 @@
+export const MOCK_PRODUCTS = [
+  {
+    id: 1,
+    name: 'Apple MacBook Pro 16" (M3 Max, 36GB Unified Memory, 1TB SSD) - Space Black',
+    brandName: 'Apple',
+    categoryName: 'Laptops',
+    sku: 'MBP-16-M3MAX',
+    price: 349900,
+    salePrice: 329900,
+    originalPrice: 349900,
+    discountPercent: 6,
+    stockQuantity: 15,
+    averageRating: 4.9,
+    reviewCount: 48,
+    mainImage: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
+    warranty: '1 Year Apple International Warranty',
+    description: '16.2-inch Liquid Retina XDR display, M3 Max chip with 14-core CPU and 30-core GPU, up to 22 hours of battery life.',
+    specifications: [
+      { specName: 'Processor', specValue: 'Apple M3 Max 14-Core' },
+      { specName: 'RAM', specValue: '36GB Unified Memory' },
+      { specName: 'Storage', specValue: '1TB Superfast SSD' },
+      { specName: 'Display', specValue: '16.2" Liquid Retina XDR 120Hz' }
+    ]
+  },
+  {
+    id: 2,
+    name: 'ASUS ROG Strix SCAR 16 (Intel Core i9-14900HX, RTX 4080 12GB, 32GB DDR5, 2TB SSD)',
+    brandName: 'ASUS ROG',
+    categoryName: 'Laptops',
+    sku: 'ROG-G634JZ',
+    price: 289990,
+    salePrice: 264990,
+    originalPrice: 319990,
+    discountPercent: 17,
+    stockQuantity: 8,
+    averageRating: 4.8,
+    reviewCount: 32,
+    mainImage: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&auto=format&fit=crop&q=80',
+    warranty: '2 Year ASUS Brand Onsite Warranty',
+    description: 'ROG Nebula HDR 240Hz Mini-LED QHD+ display with Conductonaut Extreme liquid metal cooling.',
+    specifications: [
+      { specName: 'Processor', specValue: 'Intel Core i9-14900HX (24 Cores)' },
+      { specName: 'GPU', specValue: 'NVIDIA GeForce RTX 4080 12GB (175W TGP)' },
+      { specName: 'RAM', specValue: '32GB Dual-Channel DDR5 5600MHz' },
+      { specName: 'Display', specValue: '16" Mini-LED QHD+ 240Hz 3ms' }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Apple iPhone 15 Pro Max (256GB, Natural Titanium, 5G)',
+    brandName: 'Apple',
+    categoryName: 'Smartphones',
+    sku: 'IPH-15PM-256',
+    price: 159900,
+    salePrice: 148900,
+    originalPrice: 159900,
+    discountPercent: 7,
+    stockQuantity: 24,
+    averageRating: 4.9,
+    reviewCount: 115,
+    mainImage: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80',
+    warranty: '1 Year Apple India Warranty',
+    description: 'Aerospace-grade titanium design, A17 Pro chip, 48MP main camera with 5x optical telephoto zoom.',
+    specifications: [
+      { specName: 'Processor', specValue: 'Apple A17 Pro (3nm Silicon)' },
+      { specName: 'Storage', specValue: '256GB NVMe' },
+      { specName: 'Camera', specValue: '48MP Main + 12MP Ultra-Wide + 5x Telephoto' },
+      { specName: 'Display', specValue: '6.7" Super Retina XDR ProMotion 120Hz' }
+    ]
+  },
+  {
+    id: 4,
+    name: 'Samsung Galaxy S24 Ultra 5G (12GB RAM, 512GB Storage, Titanium Gray, AI Enabled)',
+    brandName: 'Samsung',
+    categoryName: 'Smartphones',
+    sku: 'SMS-S24U-512',
+    price: 139999,
+    salePrice: 129999,
+    originalPrice: 144999,
+    discountPercent: 10,
+    stockQuantity: 18,
+    averageRating: 4.8,
+    reviewCount: 89,
+    mainImage: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=800&auto=format&fit=crop&q=80',
+    warranty: '1 Year Comprehensive Samsung Warranty',
+    description: 'Galaxy AI with Circle to Search, Live Translate, 200MP Quad-Telephoto camera and built-in S-Pen stylus.',
+    specifications: [
+      { specName: 'Processor', specValue: 'Snapdragon 8 Gen 3 for Galaxy' },
+      { specName: 'RAM', specValue: '12GB LPDDR5X' },
+      { specName: 'Camera', specValue: '200MP Main + 50MP 5x + 10MP 3x + 12MP' },
+      { specName: 'Battery', specValue: '5000mAh with 45W Fast Charging' }
+    ]
+  },
+  {
+    id: 5,
+    name: 'NVIDIA GeForce RTX 4090 Founders Edition 24GB GDDR6X Graphics Card',
+    brandName: 'NVIDIA',
+    categoryName: 'PC Components',
+    sku: 'NV-RTX-4090FE',
+    price: 189999,
+    salePrice: 174999,
+    originalPrice: 199999,
+    discountPercent: 12,
+    stockQuantity: 6,
+    averageRating: 5.0,
+    reviewCount: 42,
+    mainImage: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800&auto=format&fit=crop&q=80',
+    warranty: '3 Year Official NVIDIA Warranty',
+    description: 'Ada Lovelace architecture, 16384 CUDA cores, 24GB G6X memory, DLSS 3.5 AI neural rendering.',
+    specifications: [
+      { specName: 'GPU Core', specValue: 'AD102 with 16384 CUDA Cores' },
+      { specName: 'VRAM', specValue: '24GB GDDR6X 384-bit' },
+      { specName: 'Power', specValue: '450W TDP (Requires 850W+ PSU)' },
+      { specName: 'Interface', specValue: 'PCIe 4.0 x16' }
+    ]
+  },
+  {
+    id: 6,
+    name: 'Sony BRAVIA 65" XR-65A80L 4K Ultra HD Cognitive Processor XR OLED TV',
+    brandName: 'Sony',
+    categoryName: 'TVs',
+    sku: 'SNY-XR-65A80L',
+    price: 249900,
+    salePrice: 209990,
+    originalPrice: 269900,
+    discountPercent: 22,
+    stockQuantity: 10,
+    averageRating: 4.9,
+    reviewCount: 26,
+    mainImage: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=800&auto=format&fit=crop&q=80',
+    warranty: '2 Year Sony Comprehensive Warranty',
+    description: 'Cognitive Processor XR, Acoustic Surface Audio+, Dolby Vision Atmos, Perfect for PlayStation 5 4K 120Hz.',
+    specifications: [
+      { specName: 'Display', specValue: '65" 4K OLED (3840 x 2160)' },
+      { specName: 'Refresh Rate', specValue: '120Hz with VRR & ALLM' },
+      { specName: 'Audio', specValue: '50W Acoustic Surface Audio+' },
+      { specName: 'Smart OS', specValue: 'Google TV with Apple AirPlay 2' }
+    ]
+  },
+  {
+    id: 7,
+    name: 'Sony WH-1000XM5 Wireless Industry Leading Noise Canceling Headphones',
+    brandName: 'Sony',
+    categoryName: 'Headphones',
+    sku: 'SNY-WH-1000XM5',
+    price: 34990,
+    salePrice: 26990,
+    originalPrice: 38990,
+    discountPercent: 30,
+    stockQuantity: 35,
+    averageRating: 4.8,
+    reviewCount: 184,
+    mainImage: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
+    warranty: '1 Year Sony India Warranty',
+    description: 'Auto NC Optimizer, Integrated Processor V1, 8 microphones, 30 hours battery life with quick charging.',
+    specifications: [
+      { specName: 'Driver Unit', specValue: '30mm Carbon Fiber Composite' },
+      { specName: 'Battery', specValue: '30 Hours with ANC Active' },
+      { specName: 'Connectivity', specValue: 'Bluetooth 5.2 with LDAC & Multipoint' },
+      { specName: 'Microphones', specValue: '8 Mics for Beamforming Voice' }
+    ]
+  },
+  {
+    id: 8,
+    name: 'Intel Core i9-14900K 24-Core Desktop Processor (Up to 6.0GHz LGA1700 Unlocked)',
+    brandName: 'Intel',
+    categoryName: 'PC Components',
+    sku: 'INT-I9-14900K',
+    price: 58999,
+    salePrice: 51999,
+    originalPrice: 64999,
+    discountPercent: 20,
+    stockQuantity: 20,
+    averageRating: 4.9,
+    reviewCount: 54,
+    mainImage: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800&auto=format&fit=crop&q=80',
+    warranty: '3 Year Intel Boxed Warranty',
+    description: '24 Cores (8 P-cores + 16 E-cores) and 32 Threads with Intel Thermal Velocity Boost up to 6.0 GHz.',
+    specifications: [
+      { specName: 'Socket', specValue: 'LGA1700 (Intel 700/600 Chipsets)' },
+      { specName: 'Max Clock', specValue: '6.0 GHz Turbo' },
+      { specName: 'Cores / Threads', specValue: '24 Cores / 32 Threads' },
+      { specName: 'Memory Support', specValue: 'DDR5 5600MHz / DDR4 3200MHz' }
+    ]
+  }
+];
+
+export const MOCK_CATEGORIES = [
+  { id: 1, name: 'Laptops', slug: 'laptops', productCount: 18, imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500' },
+  { id: 2, name: 'Smartphones', slug: 'smartphones', productCount: 24, imageUrl: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500' },
+  { id: 3, name: 'TVs', slug: 'tvs', productCount: 12, imageUrl: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?w=500' },
+  { id: 4, name: 'PC Components', slug: 'pc-components', productCount: 45, imageUrl: 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=500' },
+  { id: 5, name: 'Headphones', slug: 'headphones', productCount: 16, imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500' },
+  { id: 6, name: 'Smartwatches', slug: 'smartwatches', productCount: 14, imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500' },
+  { id: 7, name: 'Gaming', slug: 'gaming', productCount: 22, imageUrl: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500' },
+  { id: 8, name: 'Cameras', slug: 'cameras', productCount: 9, imageUrl: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=500' },
+];

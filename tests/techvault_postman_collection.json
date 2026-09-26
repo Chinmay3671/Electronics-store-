@@ -1,0 +1,319 @@
+{
+  "info": {
+    "name": "TechVault API Test Suite",
+    "description": "Comprehensive integration and automated API assertions for TechVault Electronics Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Health status is UP', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql('UP');",
+              "    pm.expect(jsonData.database).to.eql('UP');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication - Admin Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@techvault.com\",\n  \"password\": \"Password123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Admin login successful', function () { pm.response.to.have.status(200); });",
+              "pm.test('Returns valid JWT token and ROLE_ADMIN', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.data.token).to.be.a('string');",
+              "    pm.expect(jsonData.data.role).to.eql('ROLE_ADMIN');",
+              "    pm.environment.set('adminToken', jsonData.data.token);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Authentication - User Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@techvault.com\",\n  \"password\": \"Password123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('User login successful', function () { pm.response.to.have.status(200); });",
+              "pm.test('Returns valid JWT token and ROLE_USER', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.role).to.eql('ROLE_USER');",
+              "    pm.environment.set('userToken', jsonData.data.token);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Authentication - Invalid Login Test",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@techvault.com\",\n  \"password\": \"WrongPassword!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Invalid login returns 401 Unauthorized', function () { pm.response.to.have.status(401); });",
+              "pm.test('Returns proper error format', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.false;",
+              "    pm.expect(jsonData.errorCode).to.eql('INVALID_CREDENTIALS');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Product Catalog - List & Pagination",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/products?page=0&size=10",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products"],
+          "query": [{ "key": "page", "value": "0" }, { "key": "size", "value": "10" }]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Returns paginated product array', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.be.true;",
+              "    pm.expect(jsonData.data).to.be.an('array');",
+              "    pm.expect(jsonData.pagination).to.have.property('totalElements');",
+              "    pm.expect(jsonData.pagination.totalElements).to.be.at.least(10);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Smart Product Finder - Recommendations",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"category\": \"laptops\",\n  \"budget\": 300000,\n  \"usage\": [\"gaming\", \"college\"],\n  \"ram\": 32\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/recommendations",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "recommendations"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Recommendations returned successfully', function () { pm.response.to.have.status(200); });",
+              "pm.test('Contains scored items with match reasons', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.recommendations).to.be.an('array');",
+              "    pm.expect(jsonData.recommendations[0].matchScore).to.be.a('number');",
+              "    pm.expect(jsonData.recommendations[0].matchReasons).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. PC Builder - Compatibility Check",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cpuId\": 9,\n  \"motherboardId\": 14,\n  \"ramId\": 11,\n  \"gpuId\": 10,\n  \"psuId\": 13\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/compatibility/check",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "compatibility", "check"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Compatibility check 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Calculates wattage and evaluates compatibility', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property('compatible');",
+              "    pm.expect(jsonData.estimatedWattage).to.be.above(100);",
+              "    pm.expect(jsonData.issues).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Coupons - Validation Engine",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"code\": \"WELCOME10\",\n  \"orderTotal\": 5000\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/coupons/validate",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "coupons", "validate"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Coupon validated', function () { pm.response.to.have.status(200); });",
+              "pm.test('Computes 10% discount accurately', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.valid).to.be.true;",
+              "    pm.expect(jsonData.data.discountAmount).to.eql(500);",
+              "    pm.expect(jsonData.data.finalTotal).to.eql(4500);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Admin - Dashboard Analytics",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "dashboard"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Admin dashboard 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Contains KPI metrics and revenue charts', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data).to.have.property('totalRevenue');",
+              "    pm.expect(jsonData.data).to.have.property('totalOrders');",
+              "    pm.expect(jsonData.data.revenueChart).to.be.an('array');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. Security - Unauthorized Admin Access Blocked",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{userToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/admin/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "admin", "dashboard"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Non-admin user blocked with 403 Forbidden', function () { pm.response.to.have.status(403); });"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
